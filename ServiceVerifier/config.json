@@ -1,0 +1,9 @@
+﻿{
+  "serviceName": "ProxyYouse",
+  "sentryDns": "https://6535d08072fa4034a5f24bcfde9c960f:ab8d166434024b7e8b005681fc527602@sentry.io/270249",
+  "emailHost": "smtp.gmail.com",
+  "emailFrom": "proxy.youse@gmail.com",
+  "emailName": "Proxy",
+  "emailPassword": "Bogota.2018",
+  "emailTo": "dsierra@seidor.com"
+}
