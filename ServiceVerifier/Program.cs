@@ -2,6 +2,7 @@
 using SharpRaven;
 using SharpRaven.Data;
 using System;
+using System.Windows.Forms;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -25,7 +26,7 @@ namespace ServiceVerifier
         {
             try{
                 config = JsonConvert.DeserializeObject<ConfigProperty>(File.ReadAllText("config.json"));
-                ravenClient = new RavenClient(config.SentryDns);
+                MessageBox.Show("The Recovery program have started successfully", "Recovery "+config.ServiceName, MessageBoxButtons.OK);
                 aTimer = new System.Timers.Timer(5000);
                 aTimer.Elapsed += OnTimedEvent;
                 aTimer.AutoReset = true;
@@ -50,7 +51,7 @@ namespace ServiceVerifier
                 {
                     bool isRestarted = false;
                     log.LogServiceWrite("The service has stopped", "Info");
-                    ravenClient.Capture(new SentryEvent("The service has stopped at " + e.SignalTime));
+                    
                     try
                     {
                         service.Start();
@@ -68,6 +69,7 @@ namespace ServiceVerifier
                     }
                     if (!firstTimeFails)
                     {
+                        ravenClient.Capture(new SentryEvent("The service has stopped at " + e.SignalTime));
                         firstTimeFails = true;
                         SendEmail(isRestarted);
                     }
@@ -129,12 +131,10 @@ namespace ServiceVerifier
         public static void SendCompletedCallback(object sender, AsyncCompletedEventArgs e)
         {
             //Get the unique identifier for this asynchronous operation.
-            String token = (string)e.UserState;
 
             if (e.Error != null)
             {
-                Console.WriteLine("Error sending e-mail [{0}] {1}", token, e.Error.ToString());
-                log.LogServiceWrite(("Error sending e-mail "+ token+" "+ e.Error.ToString()), "Error");
+                log.LogServiceWrite(("Error sending e-mail "+ e.Error.ToString()), "Error");
             }
             else
             {
