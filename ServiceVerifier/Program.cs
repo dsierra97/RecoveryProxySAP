@@ -26,6 +26,7 @@ namespace ServiceVerifier
         {
             try{
                 config = JsonConvert.DeserializeObject<ConfigProperty>(File.ReadAllText("config.json"));
+                ravenClient = new RavenClient(config.SentryDns);
                 MessageBox.Show("The Recovery program have started successfully", "Recovery "+config.ServiceName, MessageBoxButtons.OK);
                 aTimer = new System.Timers.Timer(5000);
                 aTimer.Elapsed += OnTimedEvent;
@@ -81,7 +82,7 @@ namespace ServiceVerifier
             }
             catch (Exception ex)
             {
-                log.LogServiceWrite("Error "+ ex.Message, "Error" );
+                log.LogServiceWrite("Error "+ ex.Message + " "+ ex.Source, "Error" );
             }
         }
         
